@@ -950,7 +950,7 @@ function sendWhatsApp(){
   const msg=document.getElementById('wp-msg').value.trim();
   if(!name){alert('Lütfen adınızı giriniz.');return;}
   if(!selectedTopic){alert('Lütfen bir konu seçiniz.');return;}
-  const phone='905346709048';
+  const phone='905373909495';
   const text=`Merhaba Hülya Hanım,%0A%0AAdım: ${encodeURIComponent(name)}%0AKonu: ${encodeURIComponent(selectedTopic)}%0A%0A${encodeURIComponent(msg||'Bilgi almak istiyorum.')}`;
   window.open(`https://wa.me/${phone}?text=${text}`,'_blank');
 }
