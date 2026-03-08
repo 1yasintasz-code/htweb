@@ -927,7 +927,7 @@ function showPage(p){closeMobileMenu();
   document.getElementById('page-'+p).classList.add('active');
   if(p==='blog') document.getElementById('nav-blog').classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
-  if(p==='blog') renderBlogGrid();
+  if(p==='blog') initBlog();
   history.replaceState(null,'','#'+p);
 }
 function goHome(){closeMobileMenu();
@@ -1016,7 +1016,64 @@ const CAT_CONFIG={
   genel:   {label:'Genel',    cls:'cat-genel',   bg:'linear-gradient(135deg,var(--bg3),var(--bg2))'},
 };
 
-// ── localStorage ile kalıcı blog ──
+// ── Supabase config ──
+const SUPABASE_URL = 'https://xiwwlaejgoygruaixrpw.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhpd3dsYWVqZ295Z3R1YWl4cnB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5MzA1NjAsImV4cCI6MjA4ODUwNjU2MH0.LNxya_-Q7SlTKJR1dWLpiD2nQT_-fWMzjYxIJfKUD_c';
+
+async function sbFetch(path, opts={}) {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer || 'return=representation',
+      ...opts.headers
+    },
+    ...opts
+  });
+  if (!res.ok) { const e = await res.text(); throw new Error(e); }
+  const txt = await res.text();
+  return txt ? JSON.parse(txt) : [];
+}
+
+async function loadPostsFromDB() {
+  try {
+    const rows = await sbFetch('posts?order=id.desc');
+    return rows.map(r => ({
+      id: r.id, title: r.title, content: r.content,
+      excerpt: r.excerpt, cat: r.cat||'genel',
+      emoji: r.emoji||'✦', img: r.img||'',
+      date: r.date, readtime: r.readtime||'5 dk okuma'
+    }));
+  } catch(e) {
+    console.warn('Supabase yüklenemedi:', e);
+    return STARTER_POSTS.map(p=>({...p}));
+  }
+}
+
+async function savePostToDB(post) {
+  const row = {
+    title: post.title, content: post.content,
+    excerpt: post.excerpt, cat: post.cat,
+    emoji: post.emoji, img: post.img||'',
+    date: post.date, readtime: post.readtime
+  };
+  const res = await sbFetch('posts', {
+    method: 'POST',
+    prefer: 'return=representation',
+    body: JSON.stringify(row)
+  });
+  return res[0];
+}
+
+async function deletePostFromDB(id) {
+  await sbFetch('posts?id=eq.'+id, {
+    method: 'DELETE',
+    prefer: 'return=minimal'
+  });
+}
+
+// ── localStorage ile kalıcı blog (fallback) ──
 const STORAGE_KEY = 'hulya_blog_posts';
 const STARTER_POSTS = [
   {id:1,title:'Feng Shui ile Evinizde Pozitif Enerji Yaratın',cat:'fengshui',emoji:'🏠',excerpt:'Chi enerjisini doğru yönlendirerek yaşam alanınızı huzur ve bereket dolu bir mekâna dönüştürün.',content:`## Feng Shui'nin Temel Prensibi\n\nFeng Shui, "rüzgar" ve "su" anlamına gelen iki Çince kelimenin birleşimidir. Antik Çin felsefesine göre bu iki unsur, yaşamı taşıyan Chi enerjisinin sembolüdür.\n\n## Evinizdeki Enerji Akışını İyileştirin\n\nEvinizi Chi enerjisinin özgürce dolaşabileceği şekilde düzenlemek, yaşam kalitenizi doğrudan etkiler. Kapıların önündeki engeller enerji akışını bloke eder.\n\n**Dikkat etmeniz gereken noktalar:**\n\n- Giriş kapınız temiz ve açık olmalıdır\n- Köşelerde yığılı eşyalardan kaçının\n- Doğal ışığı evinize davet edin\n- Bitkiler ile enerjiyi canlandırın\n\n## Renklerin Gücü\n\nHer rengin farklı bir elementle bağlantısı vardır. Ahşap elementi için yeşil tonlar, ateş elementi için kırmızı ve turuncu tonlar kullanılabilir.`,date:'15 Ocak 2024',readtime:'6 dk okuma'},
@@ -1024,28 +1081,18 @@ const STARTER_POSTS = [
   {id:3,title:'Tarot Kartlarıyla Kendinizi Tanıyın',cat:'tarot',emoji:'🃏',excerpt:'Tarot, bir kehanet aracı değil; bilinçaltınızı ve içsel bilgeliğinizi ortaya çıkaran güçlü bir yansıma aracıdır.',content:`## Tarot Yanlış Anlaşılıyor\n\nTarot kartları, çoğu kişinin düşündüğünün aksine "geleceği gören" büyülü nesneler değildir. Tarot, bilinçaltınızın sesini görsel semboller aracılığıyla yüzeye çıkaran bir araçtır.\n\n## 78 Kartın Yapısı\n\nTarot destesi iki ana bölümden oluşur:\n\n**Büyük Arkana (22 kart):** Evrensel yaşam deneyimlerini ve ruhsal dersleri temsil eder. Ahmak'tan Dünya'ya uzanan yolculuk, bireyin spiritüel gelişimini anlatır.\n\n**Küçük Arkana (56 kart):** Günlük yaşamın dört unsuruna ayrılır: Değnekler (Ateş), Kupalar (Su), Kılıçlar (Hava), Pentakller (Toprak).\n\n## Başlangıç Yayılımı\n\nYeni başlayanlar için üç kartlı yayılım idealdir: Geçmiş – Şimdiki Zaman – Gelecek. Bu basit yayılım bile derin içgörüler sunabilir.`,date:'3 Ocak 2024',readtime:'5 dk okuma'},
 ];
 
-function loadPosts() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch(e) {}
-  return STARTER_POSTS.map(p => ({...p}));
-}
-
-function savePosts() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(POSTS));
-  } catch(e) {
-    console.warn('localStorage kayıt hatası:', e);
-  }
-}
-
-let POSTS = loadPosts();
+let POSTS = [];
 let currentFilter = 'all';
-let nextId = POSTS.length > 0 ? Math.max(...POSTS.map(p => p.id)) + 1 : 1;
+let nextId = 1;
+
+async function initBlog() {
+  const grid = document.getElementById('blog-grid');
+  const empty = document.getElementById('blog-empty');
+  if (grid) grid.innerHTML = '<div style="text-align:center;padding:60px;color:var(--muted);font-size:.9rem">Yazılar yükleniyor…</div>';
+  POSTS = await loadPostsFromDB();
+  nextId = POSTS.length > 0 ? Math.max(...POSTS.map(p=>p.id)) + 1 : 1;
+  renderBlogGrid();
+}
 
 
 function getCatBg(cat){return CAT_CONFIG[cat]?.bg||'var(--bg3)';}
@@ -1181,7 +1228,7 @@ function loadLocalImg(input){
   reader.readAsDataURL(file);
 }
 
-function publishPost(){
+async function publishPost(){
   const title=document.getElementById('npf-title').value.trim();
   const content=document.getElementById('npf-content').value.trim();
   if(!title){alert('Lütfen yazı başlığını giriniz.');document.getElementById('npf-title').focus();return;}
@@ -1201,9 +1248,15 @@ function publishPost(){
   const now=new Date();
   const months=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
   const dateStr=`${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-  const post={id:nextId++,title,cat,emoji,excerpt:excerpt||content.substring(0,120).replace(/##.*\n/g,'').trim()+'…',content,date:dateStr,readtime,img};
-  POSTS.unshift(post);
-  savePosts();
+  const postData={title,cat,emoji,excerpt:excerpt||content.substring(0,120).replace(/##.*\n/g,'').trim()+'…',content,date:dateStr,readtime,img};
+  try {
+    const saved = await savePostToDB(postData);
+    const post = {...postData, id: saved ? saved.id : nextId++};
+    POSTS.unshift(post);
+  } catch(e) {
+    alert('Yazı kaydedilemedi: ' + e.message);
+    return;
+  }
   // Reset form
   document.getElementById('npf-title').value='';
   document.getElementById('npf-content').value='';
@@ -1217,11 +1270,15 @@ function publishPost(){
   renderBlogGrid();
 }
 
-function deletePost(id){
+async function deletePost(id){
   if(!confirm('Bu yazıyı silmek istediğinizden emin misiniz?')) return;
-  POSTS=POSTS.filter(p=>p.id!==id);
-  savePosts();
-  renderBlogGrid();
+  try {
+    await deletePostFromDB(id);
+    POSTS = POSTS.filter(p=>p.id!==id);
+    renderBlogGrid();
+  } catch(e) {
+    alert('Silinemedi: ' + e.message);
+  }
 }
 
 // Init
@@ -1230,6 +1287,7 @@ document.addEventListener('DOMContentLoaded',function(){
   var validPages = ['home','bazi','blog'];
   var startPage = validPages.includes(hash) ? hash : 'home';
   showPage(startPage);
+  // initBlog showPage içinde çağrılıyor
 });
 
 // ══ GENDER SELECTION ══
