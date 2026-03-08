@@ -69,11 +69,7 @@ nav{display:flex;align-items:center;gap:2px;}
   background:linear-gradient(145deg,#faf9ff 0%,#ede9ff 40%,#f5f2ff 70%,#fefeff 100%);
   position:relative;overflow:hidden;padding:80px 52px;
 }
-.home-hero::before{
-  content:'風水';font-family:'DM Serif Display',serif;font-size:340px;
-  color:rgba(124,92,252,.04);position:absolute;right:-40px;top:50%;
-  transform:translateY(-50%);pointer-events:none;user-select:none;line-height:1;letter-spacing:-12px;
-}
+.home-hero::before{content:'';display:none;}
 .hero-inner{max-width:1100px;width:100%;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:60px;align-items:center;}
 .hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--accent-soft);color:var(--accent);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:6px 16px;border-radius:100px;margin-bottom:28px;}
 .home-hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2.8rem,5vw,4.6rem);color:var(--text);line-height:1.08;margin-bottom:24px;letter-spacing:-.03em;}
@@ -183,7 +179,7 @@ footer{background:var(--text);padding:60px 52px 36px;}
 
 /* ════════════════════════ BAZI PAGE ════════════════════════ */
 .bazi-hero{text-align:center;padding:96px 24px 52px;background:linear-gradient(160deg,#fefeff 0%,#f2eeff 45%,#fefeff 100%);position:relative;overflow:hidden;}
-.bazi-hero::before{content:'四柱命理';font-family:'DM Serif Display',serif;font-size:200px;color:rgba(124,92,252,.035);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;user-select:none;letter-spacing:-8px;line-height:1;}
+.bazi-hero::before{content:'';display:none;}
 .hero-pill{display:inline-flex;align-items:center;gap:6px;background:var(--accent-soft);color:var(--accent);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:5px 16px;border-radius:100px;margin-bottom:26px;}
 .bazi-hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2.4rem,5vw,4rem);color:var(--text);line-height:1.1;margin-bottom:18px;letter-spacing:-.03em;}
 .bazi-hero h1 em{font-style:italic;color:var(--accent);}
@@ -266,7 +262,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   background:linear-gradient(160deg,#fefeff 0%,#f2eeff 45%,#fefeff 100%);
   position:relative;overflow:hidden;
 }
-.blog-hero::before{content:'✍';font-size:280px;color:rgba(124,92,252,.04);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;user-select:none;line-height:1;z-index:0;}
+.blog-hero::before{content:'';display:none;}
 .blog-hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2.4rem,5vw,3.8rem);color:var(--text);line-height:1.1;margin-bottom:16px;letter-spacing:-.03em;}
 .blog-hero h1 em{font-style:italic;color:var(--accent);}
 .blog-hero p{color:var(--text2);font-size:.98rem;max-width:480px;margin:0 auto;line-height:1.8;font-weight:300;}
@@ -475,9 +471,6 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 }
 
 @media(max-width:480px){
-  .blog-hero::before{font-size:120px;}
-  .bazi-hero::before{font-size:80px;}
-  .home-hero::before{font-size:120px;}
   .blog-hero .hero-pill,.bazi-hero .hero-pill{position:relative;z-index:1;}
   .blog-hero h1,.bazi-hero h1,.blog-hero p,.bazi-hero p{position:relative;z-index:1;}
   header{height:auto;min-height:66px;padding:8px 16px;}
