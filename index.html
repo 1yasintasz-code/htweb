@@ -679,7 +679,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
         <div class="contact-sidebar">
           <div class="info-card">
             <h3>İletişim Bilgileri</h3>
-            <div class="info-row"><div class="info-icon">📱</div><div class="info-text"><div class="il">WhatsApp / Telefon</div><div class="iv">0537 390 9495</div></div></div>
+            <div class="info-row"><div class="info-icon">📱</div><div class="info-text"><div class="il">WhatsApp / Telefon</div><div class="iv">0537 390 94 95</div></div></div>
             <div class="info-row"><div class="info-icon">📧</div><div class="info-text"><div class="il">E-Posta</div><div class="iv"><a href="mailto:hulyatepefengshui@gmail.com" style="color:var(--accent)">hulyatepefengshui@gmail.com</a></div></div></div>
             <div class="info-row"><div class="info-icon">🕐</div><div class="info-text"><div class="il">Çalışma Saatleri</div><div class="iv">Hafta içi 09:00 – 18:00</div></div></div>
           </div>
@@ -950,7 +950,7 @@ function sendWhatsApp(){
   const msg=document.getElementById('wp-msg').value.trim();
   if(!name){alert('Lütfen adınızı giriniz.');return;}
   if(!selectedTopic){alert('Lütfen bir konu seçiniz.');return;}
-  const phone='905373909495';
+  const phone='905346709048';
   const text=`Merhaba Hülya Hanım,%0A%0AAdım: ${encodeURIComponent(name)}%0AKonu: ${encodeURIComponent(selectedTopic)}%0A%0A${encodeURIComponent(msg||'Bilgi almak istiyorum.')}`;
   window.open(`https://wa.me/${phone}?text=${text}`,'_blank');
 }
@@ -1011,28 +1011,27 @@ const CAT_CONFIG={
 const SUPABASE_URL = 'https://xiwwlaejgoygruaixrpw.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhpd3dsYWVqZ295Z3R1YWl4cnB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5MzA1NjAsImV4cCI6MjA4ODUwNjU2MH0.LNxya_-Q7SlTKJR1dWLpiD2nQT_-fWMzjYxIJfKUD_c';
 
-async function sbFetch(path, opts={}) {
+async function sbFetch(path, method, body) {
   const headers = {
     'apikey': SUPABASE_KEY,
     'Authorization': 'Bearer ' + SUPABASE_KEY,
     'Content-Type': 'application/json',
+    'Prefer': method === 'POST' ? 'return=representation' : 'return=minimal'
   };
-  if (opts.method === 'POST') headers['Prefer'] = 'return=representation';
-  if (opts.method === 'DELETE') headers['Prefer'] = 'return=minimal';
-  const fetchOpts = {
-    method: opts.method || 'GET',
-    headers
-  };
-  if (opts.body) fetchOpts.body = opts.body;
-  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, fetchOpts);
-  if (!res.ok) { const e = await res.text(); throw new Error(e); }
+  const opts = { method: method || 'GET', headers };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, opts);
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
   const txt = await res.text();
   return txt ? JSON.parse(txt) : [];
 }
 
 async function loadPostsFromDB() {
   try {
-    const rows = await sbFetch('posts?order=id.desc');
+    const rows = await sbFetch('posts?order=created_at.desc', 'GET');
     return rows.map(r => ({
       id: r.id, title: r.title, content: r.content,
       excerpt: r.excerpt, cat: r.cat||'genel',
@@ -1040,7 +1039,7 @@ async function loadPostsFromDB() {
       date: r.date, readtime: r.readtime||'5 dk okuma'
     }));
   } catch(e) {
-    console.warn('Supabase yüklenemedi:', e);
+    console.warn('Supabase yüklenemedi:', e.message);
     return STARTER_POSTS.map(p=>({...p}));
   }
 }
@@ -1052,19 +1051,12 @@ async function savePostToDB(post) {
     emoji: post.emoji, img: post.img||'',
     date: post.date, readtime: post.readtime
   };
-  const res = await sbFetch('posts', {
-    method: 'POST',
-    prefer: 'return=representation',
-    body: JSON.stringify(row)
-  });
-  return res[0];
+  const res = await sbFetch('posts', 'POST', row);
+  return Array.isArray(res) ? res[0] : res;
 }
 
 async function deletePostFromDB(id) {
-  await sbFetch('posts?id=eq.'+id, {
-    method: 'DELETE',
-    prefer: 'return=minimal'
-  });
+  await sbFetch('posts?id=eq.'+id, 'DELETE');
 }
 
 // ── localStorage ile kalıcı blog (fallback) ──
