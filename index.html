@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yasinden küçük bir hatıra..</title>
+<title>Sana Dair Her Şey 🌹</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -450,6 +450,28 @@
   ::-webkit-scrollbar-track { background: var(--cream); }
   ::-webkit-scrollbar-thumb { background: var(--rose-light); border-radius: 3px; }
 
+  /* ─── LOVE PAGE ─── */
+  @keyframes popIn {
+    from { opacity:0; transform:scale(0.6) translateY(40px); }
+    to   { opacity:1; transform:scale(1) translateY(0); }
+  }
+  @keyframes floatEmoji {
+    0%,100% { transform:translateY(0) rotate(-5deg); }
+    50%      { transform:translateY(-16px) rotate(5deg); }
+  }
+  @keyframes rainFall {
+    0%   { transform:translateY(-80px) rotate(0deg); opacity:1; }
+    100% { transform:translateY(110vh) rotate(360deg); opacity:0; }
+  }
+  .rain-item {
+    position:absolute;
+    top:-60px;
+    animation: rainFall linear forwards;
+    font-size:1.6rem;
+    pointer-events:none;
+    z-index:1;
+  }
+
   /* ─── MOBILE ─── */
   @media (max-width: 480px) {
 
@@ -517,7 +539,7 @@
     <span class="hero-badge">Sana Yazılmış Her Kelime</span>
     <h1>Seninle Olmak<br><em>Çok Güzel Hop Ol</em></h1>
     <div class="hero-divider"><span>🌹</span></div>
-    <div class="hero-date">Bugün ve her zaman, sonsuza dek seninle Tugba DENİZ..</div>
+    <div class="hero-date">Bugün ve her zaman, sonsuza dek seninle…</div>
     <div class="scroll-hint">↓ aşağı kaydır ↓</div>
   </div>
 
@@ -818,7 +840,74 @@ Seni sana emanet ettiğimde anladım..</p>
     <p>🌹 Seni çok seviyorum 🌹</p>
     <p>Bu sayfa sana, sadece sana aittir.</p>
     <small>Sevgiyle hazırlandı &hearts;</small>
+    <div style="margin-top:2rem;">
+      <button onclick="openLovePage()" style="
+        font-family:'Dancing Script',cursive;
+        font-size:1.4rem;
+        color:white;
+        background: linear-gradient(135deg, #c8405a, #e8879a);
+        border:none;
+        padding:0.9rem 2.8rem;
+        border-radius:50px;
+        cursor:pointer;
+        box-shadow: 0 4px 24px rgba(200,64,90,0.35);
+        transition: all 0.3s;
+        letter-spacing:0.05em;
+      " onmouseover="this.style.transform='scale(1.06)';this.style.boxShadow='0 8px 32px rgba(200,64,90,0.45)'"
+         onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 24px rgba(200,64,90,0.35)'">
+        Seni Seviyorum ♥
+      </button>
+    </div>
   </footer>
+</div>
+
+<!-- ═══ SÜRPRIZ SAYFA ═══ -->
+<div id="lovePage" style="
+  position:fixed; inset:0; z-index:9999;
+  background: linear-gradient(160deg, #fff0f5 0%, #fdf6f0 50%, #fff0e8 100%);
+  display:none; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; padding:2rem;
+  overflow:hidden;
+">
+  <div id="loveRain"></div>
+
+  <div style="position:relative; z-index:2; animation: popIn 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards;">
+    <div style="font-size:clamp(3rem,12vw,6rem); margin-bottom:1rem; animation: floatEmoji 3s ease-in-out infinite;">🌸</div>
+    <h1 style="
+      font-family:'Playfair Display',serif;
+      font-size:clamp(2.8rem,10vw,7rem);
+      color:var(--rose-dark);
+      font-weight:700;
+      font-style:italic;
+      line-height:1.1;
+      margin-bottom:1rem;
+      text-shadow: 0 2px 40px rgba(200,64,90,0.15);
+    ">İyi ki<br>Varsın</h1>
+    <div style="
+      font-family:'Cormorant Garamond',serif;
+      font-style:italic;
+      font-size:clamp(1rem,3vw,1.4rem);
+      color:#b06070;
+      margin-bottom:2.5rem;
+      letter-spacing:0.05em;
+    "></div>
+    <button onclick="closeLovePage()" style="
+      font-family:'Cormorant Garamond',serif;
+      font-size:0.9rem;
+      color:var(--rose);
+      background:transparent;
+      border:1px solid var(--rose-light);
+      padding:0.55rem 1.6rem;
+      border-radius:50px;
+      cursor:pointer;
+      letter-spacing:0.1em;
+      transition:all 0.2s;
+    " onmouseover="this.style.background='var(--rose)';this.style.color='white'"
+       onmouseout="this.style.background='transparent';this.style.color='var(--rose)'">
+      ← geri dön
+    </button>
+  </div>
 </div>
 
 <script>
@@ -828,6 +917,56 @@ Seni sana emanet ettiğimde anladım..</p>
     startCountdown();
     buildHeartGrid();
   });
+
+  // ─── LOVE PAGE ───
+  function openLovePage() {
+    const page = document.getElementById('lovePage');
+    page.style.display = 'flex';
+    page.style.opacity = '0';
+    page.style.transition = 'opacity 0.5s';
+    setTimeout(() => page.style.opacity = '1', 10);
+    document.body.style.overflow = 'hidden';
+    startRain();
+  }
+
+  function closeLovePage() {
+    const page = document.getElementById('lovePage');
+    page.style.opacity = '0';
+    setTimeout(() => {
+      page.style.display = 'none';
+      document.getElementById('loveRain').innerHTML = '';
+      document.body.style.overflow = '';
+    }, 500);
+  }
+
+  function startRain() {
+    const container = document.getElementById('loveRain');
+    container.innerHTML = '';
+    const items = ['❤️','🌸','🌹','🌷','💕','💗','✨','🌼','💐','🫧','🩷','🌺'];
+    let count = 0;
+    function drop() {
+      if (count > 60) return;
+      count++;
+      const el = document.createElement('div');
+      el.className = 'rain-item';
+      el.textContent = items[Math.floor(Math.random() * items.length)];
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.fontSize = (1 + Math.random() * 1.4) + 'rem';
+      const dur = 2.5 + Math.random() * 3;
+      el.style.animationDuration = dur + 's';
+      el.style.animationDelay = (Math.random() * 2) + 's';
+      container.appendChild(el);
+      setTimeout(() => el.remove(), (dur + 2) * 1000);
+    }
+    for (let i = 0; i < 40; i++) setTimeout(drop, i * 80);
+    // sürekli yağış
+    const interval = setInterval(() => {
+      if (document.getElementById('lovePage').style.display === 'none') {
+        clearInterval(interval); return;
+      }
+      drop();
+    }, 300);
+  }
 
   // ─── PETALS ───
   function startPetals() {
