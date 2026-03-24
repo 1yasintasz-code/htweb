@@ -425,6 +425,63 @@
     align-self: flex-start;
     padding-top: 0.2rem;
   }
+/* ─── PINTEREST BOARD ─── */
+.pinterest-section {
+  max-width: 100%;
+  padding: clamp(4rem, 10vw, 7rem) clamp(1.2rem, 5vw, 4rem);
+}
+.pinterest-shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+  gap: 1.75rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid #f0d0da;
+  background: linear-gradient(145deg, #fffdfb 0%, #f9ecef 100%);
+  box-shadow: 0 18px 50px rgba(200, 64, 90, 0.08);
+}
+.pinterest-copy {
+  align-self: start;
+  position: sticky;
+  top: 1.5rem;
+}
+.pinterest-copy p {
+  color: var(--text-mid);
+  font-size: 1.02rem;
+  line-height: 1.85;
+  margin-bottom: 1.4rem;
+}
+.pinterest-copy .board-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.4rem;
+  background: var(--rose);
+  color: white;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  transition: transform 0.25s, background 0.25s;
+}
+.pinterest-copy .board-link:hover {
+  transform: translateY(-2px);
+  background: var(--rose-dark);
+}
+.pinterest-embed {
+  min-height: 460px;
+  padding: 1rem;
+  border: 1px solid #f0d0da;
+  background: rgba(255, 255, 255, 0.88);
+}
+.pinterest-note {
+  margin-top: 1rem;
+  color: var(--rose);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
 
   /* ─── FOOTER ─── */
   .site-footer {
@@ -450,29 +507,13 @@
   ::-webkit-scrollbar-track { background: var(--cream); }
   ::-webkit-scrollbar-thumb { background: var(--rose-light); border-radius: 3px; }
 
-  /* ─── LOVE PAGE ─── */
-  @keyframes popIn {
-    from { opacity:0; transform:scale(0.6) translateY(40px); }
-    to   { opacity:1; transform:scale(1) translateY(0); }
-  }
-  @keyframes floatEmoji {
-    0%,100% { transform:translateY(0) rotate(-5deg); }
-    50%      { transform:translateY(-16px) rotate(5deg); }
-  }
-  @keyframes rainFall {
-    0%   { transform:translateY(-80px) rotate(0deg); opacity:1; }
-    100% { transform:translateY(110vh) rotate(360deg); opacity:0; }
-  }
-  .rain-item {
-    position:absolute;
-    top:-60px;
-    animation: rainFall linear forwards;
-    font-size:1.6rem;
-    pointer-events:none;
-    z-index:1;
-  }
-
   /* ─── MOBILE ─── */
+@media (max-width: 820px) {
+  .pinterest-shell { grid-template-columns: 1fr; }
+  .pinterest-copy { position: static; }
+}
+
+
   @media (max-width: 480px) {
 
     /* genel taşma önleme */
@@ -537,9 +578,9 @@
   <!-- HERO -->
   <div class="hero">
     <span class="hero-badge">Sana Yazılmış Her Kelime</span>
-    <h1>Seninle Olmak<br><em>Çok Güzel Hep Ol</em></h1>
+    <h1>Seninle Olmak<br><em>Çok Güzel Hop Ol</em></h1>
     <div class="hero-divider"><span>🌹</span></div>
-    <div class="hero-date">Bugün ve her zaman, sonsuza dek seninle Tuğba Deniz..</div>
+    <div class="hero-date">Bugün ve her zaman, sonsuza dek seninle…</div>
     <div class="scroll-hint">↓ aşağı kaydır ↓</div>
   </div>
 
@@ -660,6 +701,31 @@ Sen de bilme, Lavinia.</p>
 
     </div>
   </div>
+<!-- PINTEREST PANOSU -->
+<div class="pinterest-section">
+  <div class="pinterest-shell">
+    <div class="pinterest-copy">
+      <span class="section-label">Kaydedilen görseller</span>
+      <h2 class="section-title">Pinterest'ten Seçtiklerin</h2>
+      <p>
+      </p>
+      <a class="board-link" href="https://tr.pinterest.com/tugbadeniz988/stc/" target="_blank" rel="noreferrer">Panoyu Aç</a>
+      <p class="pinterest-note"></p>
+    </div>
+    <div class="pinterest-embed">
+      <a
+        data-pin-do="embedBoard"
+        data-pin-board-width="760"
+        data-pin-scale-height="520"
+        data-pin-scale-width="120"
+        href="https://tr.pinterest.com/tugbadeniz988/stc/"
+      >
+        tugbadeniz988 kullanıcısının stc panosu
+      </a>
+    </div>
+  </div>
+</div>
+
 
   <!-- ŞİİR KAROUSELİ -->
   <div class="carousel-section">
@@ -840,75 +906,11 @@ Seni sana emanet ettiğimde anladım..</p>
     <p>🌹 Seni çok seviyorum 🌹</p>
     <p>Bu sayfa sana, sadece sana aittir.</p>
     <small>Sevgiyle hazırlandı &hearts;</small>
-    <div style="margin-top:2rem;">
-      <button onclick="openLovePage()" style="
-        font-family:'Dancing Script',cursive;
-        font-size:1.4rem;
-        color:white;
-        background: linear-gradient(135deg, #c8405a, #e8879a);
-        border:none;
-        padding:0.9rem 2.8rem;
-        border-radius:50px;
-        cursor:pointer;
-        box-shadow: 0 4px 24px rgba(200,64,90,0.35);
-        transition: all 0.3s;
-        letter-spacing:0.05em;
-      " onmouseover="this.style.transform='scale(1.06)';this.style.boxShadow='0 8px 32px rgba(200,64,90,0.45)'"
-         onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 24px rgba(200,64,90,0.35)'">
-        Seni Seviyorum ♥
-      </button>
-    </div>
   </footer>
 </div>
 
-<!-- ═══ SÜRPRIZ SAYFA ═══ -->
-<div id="lovePage" style="
-  position:fixed; inset:0; z-index:9999;
-  background: linear-gradient(160deg, #fff0f5 0%, #fdf6f0 50%, #fff0e8 100%);
-  display:none; flex-direction:column;
-  align-items:center; justify-content:center;
-  text-align:center; padding:2rem;
-  overflow:hidden;
-">
-  <div id="loveRain"></div>
 
-  <div style="position:relative; z-index:2; animation: popIn 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards;">
-    <div style="font-size:clamp(3rem,12vw,6rem); margin-bottom:1rem; animation: floatEmoji 3s ease-in-out infinite;">🌸</div>
-    <h1 style="
-      font-family:'Playfair Display',serif;
-      font-size:clamp(2.8rem,10vw,7rem);
-      color:var(--rose-dark);
-      font-weight:700;
-      font-style:italic;
-      line-height:1.1;
-      margin-bottom:1rem;
-      text-shadow: 0 2px 40px rgba(200,64,90,0.15);
-    ">İyi ki<br>Varsın</h1>
-    <div style="
-      font-family:'Cormorant Garamond',serif;
-      font-style:italic;
-      font-size:clamp(1rem,3vw,1.4rem);
-      color:#b06070;
-      margin-bottom:2.5rem;
-      letter-spacing:0.05em;
-    "></div>
-    <button onclick="closeLovePage()" style="
-      font-family:'Cormorant Garamond',serif;
-      font-size:0.9rem;
-      color:var(--rose);
-      background:transparent;
-      border:1px solid var(--rose-light);
-      padding:0.55rem 1.6rem;
-      border-radius:50px;
-      cursor:pointer;
-      letter-spacing:0.1em;
-      transition:all 0.2s;
-    " onmouseover="this.style.background='var(--rose)';this.style.color='white'"
-       onmouseout="this.style.background='transparent';this.style.color='var(--rose)'">
-      ← geri dön
-    </button>
-  </div>
-</div>
+<script async defer src="https://assets.pinterest.com/js/pinit.js"></script>
 
 <script>
   // ─── INIT ───
@@ -917,56 +919,6 @@ Seni sana emanet ettiğimde anladım..</p>
     startCountdown();
     buildHeartGrid();
   });
-
-  // ─── LOVE PAGE ───
-  function openLovePage() {
-    const page = document.getElementById('lovePage');
-    page.style.display = 'flex';
-    page.style.opacity = '0';
-    page.style.transition = 'opacity 0.5s';
-    setTimeout(() => page.style.opacity = '1', 10);
-    document.body.style.overflow = 'hidden';
-    startRain();
-  }
-
-  function closeLovePage() {
-    const page = document.getElementById('lovePage');
-    page.style.opacity = '0';
-    setTimeout(() => {
-      page.style.display = 'none';
-      document.getElementById('loveRain').innerHTML = '';
-      document.body.style.overflow = '';
-    }, 500);
-  }
-
-  function startRain() {
-    const container = document.getElementById('loveRain');
-    container.innerHTML = '';
-    const items = ['❤️','🌸','🌹','🌷','💕','💗','✨','🌼','💐','🫧','🩷','🌺'];
-    let count = 0;
-    function drop() {
-      if (count > 60) return;
-      count++;
-      const el = document.createElement('div');
-      el.className = 'rain-item';
-      el.textContent = items[Math.floor(Math.random() * items.length)];
-      el.style.left = Math.random() * 100 + 'vw';
-      el.style.fontSize = (1 + Math.random() * 1.4) + 'rem';
-      const dur = 2.5 + Math.random() * 3;
-      el.style.animationDuration = dur + 's';
-      el.style.animationDelay = (Math.random() * 2) + 's';
-      container.appendChild(el);
-      setTimeout(() => el.remove(), (dur + 2) * 1000);
-    }
-    for (let i = 0; i < 40; i++) setTimeout(drop, i * 80);
-    // sürekli yağış
-    const interval = setInterval(() => {
-      if (document.getElementById('lovePage').style.display === 'none') {
-        clearInterval(interval); return;
-      }
-      drop();
-    }, 300);
-  }
 
   // ─── PETALS ───
   function startPetals() {
